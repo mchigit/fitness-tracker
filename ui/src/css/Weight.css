@@ -1,3 +1,33 @@
+.weight {
+  text-align: center;
+}
+
 .weight-header {
   color: white;
+}
+
+.weight-form {
+  margin: 80px 20px 40px 20px;
+  color: white;
+}
+
+.weight-form-label {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.weight-form-group {
+  margin-top: 40px;
+}
+
+.weight-form-buttongroup {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.weight-form-log-button {
+  width: 100%;
+  margin-top: 20px;
 }
