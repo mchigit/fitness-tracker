@@ -1,8 +1,8 @@
-import { Weight, WeightConstants } from "../types/WeightTypes";
+import { Weight, WeightConstants } from "./weightTypes";
 
 export const logWeight = (weight: Weight) => {
   return {
     type: WeightConstants.LOG_WEIGHT,
-    payload: weight
+    weight: weight
   };
 };

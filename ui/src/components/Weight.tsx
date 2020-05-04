@@ -1,8 +1,7 @@
 import React from "react";
+import { connect } from 'react-redux';
 import "../css/Weight.css";
 import moment from "moment";
-import { WeightType, Weight } from "../store//types/WeightTypes";
-import "../css/Weight.css";
 import {
   Form,
   Col,
@@ -20,18 +19,22 @@ import {
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 
-type State = {
-  weight: number;
-  logDate: Date | null;
-  weightType: WeightType;
-  isWeightInputValid: boolean;
-};
-export default class WeightTracker extends React.PureComponent<{}, State> {
-  state: State = {
+import { WeightType, Weight, WeightState } from '../redux/weight/weightTypes';
+import { AppState } from '../redux/index';
+import { logWeightThunk } from '../redux/weight/weightThunk';
+
+interface AppProps {
+  weight: WeightState;
+  logWeightThunk: any;
+}
+
+
+export class WeightTracker extends React.Component<AppProps> {
+  state = {
     weight: 0,
     logDate: moment().toDate(),
     weightType: WeightType.LB,
-    isWeightInputValid: true
+    isWeightInputValid: false
   };
 
   onDateChange = (date: Date | null) => {
@@ -55,8 +58,23 @@ export default class WeightTracker extends React.PureComponent<{}, State> {
           isWeightInputValid: false
         });
       }
+    } else {
+      this.setState({
+        isWeightInputValid: false
+      });
     }
   };
+
+  handleLogWeight = () => {
+    const weight: Weight = {
+      weight: this.state.weight,
+      month: this.state.logDate.getMonth() + 1,
+      day: this.state.logDate.getDate(),
+      year: this.state.logDate.getFullYear(),
+      weightType: this.state.weightType,
+    }
+    this.props.logWeightThunk(weight);
+  }
 
   render() {
     const inputProps = {
@@ -139,7 +157,7 @@ export default class WeightTracker extends React.PureComponent<{}, State> {
               </ButtonGroup>
             </div>
             <div className="weight-form-log-button">
-              <Button variant="secondary">Log</Button>
+              <Button variant="secondary" disabled={!this.state.isWeightInputValid} onClick={this.handleLogWeight}>Log</Button>
             </div>
           </Form>
         </div>
@@ -147,3 +165,12 @@ export default class WeightTracker extends React.PureComponent<{}, State> {
     );
   }
 }
+
+const mapStateToProps = (state: AppState) => ({
+  weight: state.weight
+});
+
+
+export default connect(mapStateToProps,  {
+  logWeightThunk
+})(WeightTracker);
